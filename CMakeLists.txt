@@ -1,12 +1,22 @@
-﻿# Copyright (c) 2025 Vaughn Nugent
+# Copyright (c) 2025 Vaughn Nugent
 # See the LICENSE in this directory for terms of use
-#
-# This file configures noscrypt with best defaults as possible while offering 
-# some freedom in terms of crypto libraries if desired. Some defaults and 
-# worst case fallback functions are defined and will get better as time goes on
-# 
 
 cmake_minimum_required (VERSION 3.22)
+
+if(ESP_PLATFORM)
+    idf_component_register(
+        SRCS "src/noscrypt.c" "src/hkdf.c" "src/nc-crypto.c" "src/noscryptutil.c"
+        INCLUDE_DIRS "include"
+        REQUIRES mbedtls secp256k1-frost
+    )
+
+    target_compile_definitions(${COMPONENT_LIB} PRIVATE
+        MBEDTLS_CRYPTO_LIB=1
+        NC_ENABLE_UTILS=1
+    )
+
+    return()
+endif()
 
 project(
 	noscrypt

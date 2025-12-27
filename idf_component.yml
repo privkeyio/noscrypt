@@ -1,0 +1,14 @@
+version: "0.1.6"
+description: "NIP-44 cryptography library for Nostr"
+url: "https://github.com/privkeyio/noscrypt"
+repository: "https://github.com/privkeyio/noscrypt.git"
+license: "LGPL-2.1-or-later"
+targets:
+  - esp32
+  - esp32s2
+  - esp32s3
+  - esp32c3
+  - esp32c6
+dependencies:
+  idf:
+    version: ">=5.0"
