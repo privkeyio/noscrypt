@@ -10,9 +10,21 @@ if(ESP_PLATFORM)
         REQUIRES mbedtls secp256k1-frost
     )
 
+    idf_build_get_property(secp_dir BUILD_DIR)
+    file(MAKE_DIRECTORY "${secp_dir}/secp256k1/include")
+    file(GLOB SECP_HEADERS "${CMAKE_CURRENT_LIST_DIR}/../secp256k1-frost/include/*.h")
+    foreach(header ${SECP_HEADERS})
+        get_filename_component(header_name ${header} NAME)
+        if(NOT EXISTS "${secp_dir}/secp256k1/include/${header_name}")
+            file(CREATE_LINK "${header}" "${secp_dir}/secp256k1/include/${header_name}" SYMBOLIC)
+        endif()
+    endforeach()
+    target_include_directories(${COMPONENT_LIB} PRIVATE "${secp_dir}")
+
     target_compile_definitions(${COMPONENT_LIB} PRIVATE
         MBEDTLS_CRYPTO_LIB=1
         NC_ENABLE_UTILS=1
+        _IMPL_SECURE_ZERO_MEMSET=mbedtls_platform_zeroize
     )
 
     return()
@@ -47,8 +59,9 @@ if(SECP256K1_LIB_DIR)
 
 	#search for an existing library, it's a required dependency
 	find_library(secp256k1
-		NAMES secp256k1 libsecp256k1 
+		NAMES secp256k1 libsecp256k1
 		PATHS ${SECP256K1_LIB_DIR}
+		NO_DEFAULT_PATH
 		REQUIRED
 	)
 
@@ -143,8 +156,8 @@ target_include_directories(${_NC_PROJ_NAME} PRIVATE include)
 target_include_directories(${_NC_PROJ_NAME}_static PRIVATE include)
 
 #link libsecp256k1
-target_link_libraries(${_NC_PROJ_NAME} PRIVATE secp256k1)
-target_link_libraries(${_NC_PROJ_NAME}_static PRIVATE secp256k1)
+target_link_libraries(${_NC_PROJ_NAME} PRIVATE ${secp256k1})
+target_link_libraries(${_NC_PROJ_NAME}_static PRIVATE ${secp256k1})
 
 #make vendored headers available to the project
 target_include_directories(${_NC_PROJ_NAME} SYSTEM PRIVATE ${CMAKE_SOURCE_DIR}/vendor)
