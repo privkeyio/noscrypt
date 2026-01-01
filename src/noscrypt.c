@@ -24,8 +24,8 @@
 #include "hkdf.h"
 #include "nc-crypto.h"
 
-#include <secp256k1/include/secp256k1_ecdh.h>
-#include <secp256k1/include/secp256k1_schnorrsig.h>
+#include <secp256k1_ecdh.h>
+#include <secp256k1_schnorrsig.h>
 
 /*
 * CLARIFICATION:

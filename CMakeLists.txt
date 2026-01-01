@@ -10,17 +10,6 @@ if(ESP_PLATFORM)
         REQUIRES mbedtls secp256k1-frost
     )
 
-    idf_build_get_property(secp_dir BUILD_DIR)
-    file(MAKE_DIRECTORY "${secp_dir}/secp256k1/include")
-    file(GLOB SECP_HEADERS "${CMAKE_CURRENT_LIST_DIR}/../secp256k1-frost/include/*.h")
-    foreach(header ${SECP_HEADERS})
-        get_filename_component(header_name ${header} NAME)
-        if(NOT EXISTS "${secp_dir}/secp256k1/include/${header_name}")
-            file(CREATE_LINK "${header}" "${secp_dir}/secp256k1/include/${header_name}" SYMBOLIC)
-        endif()
-    endforeach()
-    target_include_directories(${COMPONENT_LIB} PRIVATE "${secp_dir}")
-
     target_compile_definitions(${COMPONENT_LIB} PRIVATE
         MBEDTLS_CRYPTO_LIB=1
         NC_ENABLE_UTILS=1
