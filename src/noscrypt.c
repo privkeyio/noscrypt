@@ -611,6 +611,7 @@ NC_EXPORT NCResult NC_CC NCGetPublicKey(
 	/* Convert to compressed pubkey */
 	result = _convertFromXonly(ctx, &xonly, pk);
 	DEBUG_ASSERT2(result == 1, "Expected x-only pubkey serialize to return 1")
+	(void)result;
 
 	/* Clean out keypair */
 	ZERO_FILL(&keyPair, sizeof(keyPair));

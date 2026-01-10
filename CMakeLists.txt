@@ -16,6 +16,11 @@ if(ESP_PLATFORM)
         _IMPL_SECURE_ZERO_MEMSET=mbedtls_platform_zeroize
     )
 
+    target_compile_options(${COMPONENT_LIB} PRIVATE
+        -Wno-array-bounds
+        -Wno-stringop-overflow
+    )
+
     return()
 endif()
 
